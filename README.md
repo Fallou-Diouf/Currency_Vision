@@ -27,6 +27,23 @@ Filtres de Gabor–Granger : analyse de texture et des motifs de surface.
 Local Binary Patterns (LBP) : descripteur de texture robuste aux variations d’éclairage.
 # 
 Cette chaîne de méthodes classiques permet d’identifier, de compter et de caractériser les pièces de monnaie dans une image en vue de leur classification et estimation de valeur.
+# pipeline
+Image
+ ↓
+Preprocessing
+ ↓
+Canny
+ ↓
+Hough
+ ↓
+Cercles candidats
+ ↓
+Segmentation (Multi-Otsu)
+ ↓
+Validation des cercles
+ ↓
+Comptage
+
 # 📂 Structure du projet
 CurrencyVision/
 │
@@ -48,7 +65,6 @@ CurrencyVision/
 Python 3.x
 OpenCV
 NumPy
-Matplotlib
 
 # ▶️ Installation
 pip install -r requirements.txt
