@@ -1,88 +1,230 @@
-# CurrencyVision
-Est un projet académique de détection de pièces de monnaie et d’évaluation des performances d’un algorithme de vision par ordinateur, réalisé dans le cadre du module Traitement d'Image(IF06X070) à l’Université Paris Cité.
-# Contexte
-On considère une image couleur acquise par un smartphone, représentant un ensemble de pièces en euro disposées sur une surface plane à fond homogène.
-# Objectif
-Développer un algorithme de vision par ordinateur permettant de détecter les pièces présentes dans l’image, d’en déterminer le nombre et d’estimer la somme totale correspondante.
-# 👨‍💻 Mon rôle dans ce projet
+# Euro Coin Detection and Value Estimation
 
-J'ai conçu et implémenté l'ensemble de la pipeline de traitement d'images :
-- Pipeline complète de **prétraitement** (Flou Gaussien, Correction Gamma, CLAHE)
-- **Segmentation adaptative** (Otsu, Multi-Otsu, seuillage adaptatif)
-- **Détection de cercles** avec Transformée de Hough
-- **Classification des pièces** par Gabor-Granger et LBP
-- **Évaluation des performances** (accuracy, precision, recall)
-# Méthodes Classiques Utilisées
-La solution proposée pour la détection et le comptage des pièces de monnaie repose sur plusieurs méthodes classiques de traitement d’images, organisées par étape :
-# Prétraitement
-Flou Gaussien : réduction du bruit et lissage de l’image.
-Flou Médian : suppression du bruit impulsionnel tout en préservant les contours.
-Correction Gamma : ajustement de la luminosité.
-Conversion en niveaux de gris : simplification de l’image pour le traitement.
-Égalisation de l’histogramme adaptatif (CLAHE) : amélioration du contraste local.
-# Segmentation
-Seuillage d’Otsu : seuil global automatique pour séparer les pièces du fond.
-Seuillage Multi-Otsu : segmentation en plusieurs classes (fond, pièces, reflets).
-Seuillage adaptatif : seuil local pour gérer les variations d’éclairage.
-Segmentation basée sur les couleurs : séparation des pièces selon leur couleur (cuivre, doré, bicolore).
-# Détection de formes
-Détection de contours avec Canny : extraction des bords des pièces.
-Transformée de Hough (cercles) : identification des cercles correspondant aux pièces, récupération du centre et du rayon.
-# Extraction de caractéristiques
-Filtres de Gabor–Granger : analyse de texture et des motifs de surface.
-Local Binary Patterns (LBP) : descripteur de texture robuste aux variations d’éclairage.
-# 
-Cette chaîne de méthodes classiques permet d’identifier, de compter et de caractériser les pièces de monnaie dans une image en vue de leur classification et estimation de valeur.
-# pipeline
-Image
- ↓
-Preprocessing
- ↓
-Canny
- ↓
-Hough
- ↓
-Cercles candidats
- ↓
-Segmentation (Multi-Otsu)
- ↓
-Validation des cercles
- ↓
-Comptage
+## Project Overview
 
-# 📂 Structure du projet
-CurrencyVision/
+This project implements a complete computer vision pipeline for:
+
+* detecting euro coins in images
+* separating overlapping coins
+* classifying coin types
+* estimating total monetary value
+* evaluating performance against ground truth annotations
+
+The system is based on classical image processing techniques combined with feature-based matching.
+
+---
+
+## Processing Pipeline
+
+```
+Input image
+→ preprocessing
+→ segmentation
+→ morphological post-processing
+→ object separation
+→ coin detection
+→ coin classification and value estimation
+→ performance evaluation
+```
+
+---
+
+## Detailed Steps
+
+### 1. Preprocessing
+
+* grayscale conversion
+* noise reduction (blur)
+* optional contrast enhancement
+
+### 2. Segmentation
+
+* global Otsu thresholding (default)
+
+### 3. Morphological post-processing
+
+* closing operation
+* median filtering
+* mask cleaning and refinement
+
+### 4. Object separation
+
+* watershed algorithm for overlapping coins
+
+### 5. Coin detection
+
+* connected component analysis
+* local circle estimation (Hough-based)
+
+### 6. Classification and value estimation
+
+* ORB feature matching with reference images
+* RANSAC validation
+* fallback to real-scale estimation using bimetal coins (1€ or 2€)
+
+### 7. Evaluation
+
+* comparison with ground truth annotations
+* count accuracy
+* monetary error
+* report generation
+
+---
+
+## Project Structure
+
+```
+Analyse-d-image/
 │
-├── dataset/
-│         ├── images 
-│         └── labels
-├── src/ 
-│ ├── 
-│ ├── 
-│ └── 
+├── data/
+│   ├── images/
+│   │   ├── gp1/
+│   │   ├── gp2/
+│   │   ├── gp4/
+│   │   └── gp5/
+│   │
+│   ├── ref/                  # reference coin images
+│   ├── annotations.csv       # ground truth labels
 │
-├── requirements.txt
-├── README.md
-└── .gitignore
+│
+├── main.py
+├── core/
+│       ├── preprocess.py
+│       ├── morphology.py
+│       ├── detection.py
+│       ├── classification.py
+│       ├── evaluator.py
+│       └── ...
+```
 
+---
 
-# 🛠️ Technologies utilisées
+## Configuration
 
-Python 3.x
-OpenCV
-NumPy
+Pipeline parameters are defined in:
 
-# ▶️ Installation
-pip install -r requirements.txt
+```
+src/main.py → CFG dictionary
+```
 
-# 🏁 Commencer
+### Main Parameters
 
-Pour démarrer avec le projet, suivez ces étapes :
+| Parameter          | Description                |
+| ------------------ | -------------------------- |
+| SEG_METHOD_ID      | segmentation method        |
+| MORPH_METHOD_ID    | mask cleaning method       |
+| SEP_METHOD_ID      | object separation method   |
+| DETECT_METHOD_ID   | geometric detection method |
+| CLASSIFY_METHOD_ID | classification strategy    |
 
-Clonez le dépôt:
-git clone https://github.com/Fallou-Diouf/CurrencyVision.git
-cd Currency_Vision
+---
 
+## Running Modes
 
-# 👤 Auteur
-Fallou Diouf
+The program supports two execution modes.
+
+---
+
+### Single Image Debug Mode
+
+Visualizes intermediate processing stages.
+
+Edit `src/main.py`:
+
+```
+RUN_DEBUG_SINGLE = True
+DEBUG_MODE = "show" / "save" / "both"
+DEBUG_IMAGE_PATH = data/images/gp4/5.jpg
+```
+
+Run:
+
+```
+python src/main.py
+```
+
+---
+
+### Batch Evaluation Mode (Full Dataset)
+
+Processes the entire dataset and computes performance metrics.
+
+Edit:
+
+```
+RUN_DEBUG_SINGLE = False
+```
+
+Run:
+
+```
+python src/main.py
+```
+
+Output file:
+
+```
+evaluation_report.txt
+```
+
+Metrics include:
+
+* coin count accuracy
+* monetary value error
+* MAE / RMSE
+* success rate
+
+---
+
+## Classification Methods
+
+| ID | Method                                     |
+| -- | ------------------------------------------ |
+| 0  | real-scale estimation using bimetal anchor |
+| 1  | radius ratio method                        |
+| 2  | ORB feature matching with reference images |
+
+---
+
+## Requirements
+
+Install dependencies:
+
+```
+pip install opencv-python numpy matplotlib pandas
+```
+
+---
+
+## Output
+
+The system produces:
+
+* detected coin count
+* predicted coin types
+* total monetary value
+* evaluation report
+
+Optional debug outputs:
+
+* segmentation masks
+* intermediate pipeline results
+* detection visualization
+
+---
+
+## Limitations
+
+* scale estimation fails if no bimetal coin is detected
+* segmentation sensitive to lighting conditions
+* overlapping coins may be over- or under-separated
+* feature matching depends on reference image quality
+
+---
+
+## Future Improvements
+
+* deep learning-based segmentation
+* robust scale estimation without anchor coin
+* improved separation of touching coins
+* machine learning classification models
