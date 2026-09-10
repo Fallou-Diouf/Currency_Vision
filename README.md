@@ -4,8 +4,14 @@ Est un projet académique de détection de pièces de monnaie et d’évaluation
 On considère une image couleur acquise par un smartphone, représentant un ensemble de pièces en euro disposées sur une surface plane à fond homogène.
 # Objectif
 Développer un algorithme de vision par ordinateur permettant de détecter les pièces présentes dans l’image, d’en déterminer le nombre et d’estimer la somme totale correspondante.
-# Solution 
-La solution repose sur une pipeline de traitement d’images combinant prétraitement, segmentation et extraction de caractéristiques, avec une première exploration de la classification par filtres de Gabor–Granger.
+# 👨‍💻 Mon rôle dans ce projet
+
+J'ai conçu et implémenté l'ensemble de la pipeline de traitement d'images :
+- Pipeline complète de **prétraitement** (Flou Gaussien, Correction Gamma, CLAHE)
+- **Segmentation adaptative** (Otsu, Multi-Otsu, seuillage adaptatif)
+- **Détection de cercles** avec Transformée de Hough
+- **Classification des pièces** par Gabor-Granger et LBP
+- **Évaluation des performances** (accuracy, precision, recall)
 # Méthodes Classiques Utilisées
 La solution proposée pour la détection et le comptage des pièces de monnaie repose sur plusieurs méthodes classiques de traitement d’images, organisées par étape :
 # Prétraitement
