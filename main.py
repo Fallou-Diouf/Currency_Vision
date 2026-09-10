@@ -7,8 +7,9 @@ from core.evaluator import evaluate_dataset, evaluate_one_image
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # .../src
 ROOT_DIR = os.path.dirname(BASE_DIR)                   # .../Analyse-d-image
 
-IMAGES_DIR = os.path.join(ROOT_DIR, "data", "images")
-ANN_PATH   = os.path.join(ROOT_DIR, "data", "annotations.csv")
+IMAGES_DIR = os.path.join(BASE_DIR, "data", "ref")
+ANN_PATH = os.path.join(BASE_DIR, "data", "annotations.csv")
+
 
 # =========================================================
 # PIPELINE CONFIGURATION (edit here)
@@ -93,6 +94,7 @@ CFG = {
 
     }
 def main():
+
     ann = load_annotations(ANN_PATH)
 
     # -----------------------------------------------------
